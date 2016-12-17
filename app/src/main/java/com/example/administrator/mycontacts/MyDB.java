@@ -2,6 +2,7 @@ package com.example.administrator.mycontacts;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -53,6 +54,18 @@ public class MyDB extends SQLiteOpenHelper {
         }
         return true;
     }
+    public boolean delete(String table,String deleteSql,String obj[]){
+       try{
+        openConnection();
+        db.delete(table,deleteSql,obj);
+    }catch(Exception e){
+           e.printStackTrace();
+           return false;
+       }finally {
+    closeConnection();
+       }
+        return true;
+       }
     public boolean save(String tableName,ContentValues values){
         try {
             openConnection();
@@ -77,10 +90,20 @@ public class MyDB extends SQLiteOpenHelper {
         }
         return true;
     }
+    public Cursor find(String findsql,String obj[]){
+        try{
+            openConnection();
+            Cursor cursor =db.rawQuery(findsql,obj);
+            return cursor;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
     public boolean isTableExists(String tablename){
         try{
             openConnection();
-            String str=""+tablename;
+            String str="select count(*)xcount from"+tablename;
             db.rawQuery(str,null).close();
         }catch(Exception e){
             e.printStackTrace();
